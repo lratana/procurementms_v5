@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+coverage/
+.DS_Store
+*.log
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Wrangler local state
+.wrangler/
+
+# Local databases, exports and backups
+*.sqlite
+*.sqlite3
+*.db
+*.sqlitedb
+*.bak
+*.dump
+backups/
+uploads/

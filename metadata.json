@@ -1,0 +1,6 @@
+{
+  "name": "Cambodian Public Procurement Management System",
+  "description": "ប្រព័ន្ធគ្រប់គ្រងលទ្ធកម្មសាធារណៈសម្រាប់ស្ថាប័នរដ្ឋ (Cambodian Public Procurement Management System) - Full-stack management for Projects, Bidding, Contracts, Handovers, Warranties, Users, and Audit Logs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

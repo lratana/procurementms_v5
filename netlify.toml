@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_API_BASE_URL = "/api"
+
+# SPA routing. /api/* is intercepted by the Cloudflare Worker route
+# before requests reach the Netlify origin.

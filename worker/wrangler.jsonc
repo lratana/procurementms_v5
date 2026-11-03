@@ -1,0 +1,58 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "procurementms-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-03",
+  "compatibility_flags": [],
+
+  // Default environment is for local development.
+  // Do not attach a production custom-domain route here.
+  "vars": {
+    "APP_ENV": "development",
+    "CORS_ORIGIN": "http://localhost:5173"
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "procurement-db-dev",
+      "database_id": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+
+  "r2_buckets": [
+    {
+      "binding": "DOCUMENTS",
+      "bucket_name": "procurement-documents-dev"
+    }
+  ],
+
+  "env": {
+    "production": {
+      "name": "procurementms-api-production",
+      "vars": {
+        "APP_ENV": "production",
+        "CORS_ORIGIN": "https://YOUR_DOMAIN.com"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "procurement-db",
+          "database_id": "00000000-0000-0000-0000-000000000002"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "DOCUMENTS",
+          "bucket_name": "procurement-documents"
+        }
+      ],
+      "routes": [
+        {
+          "pattern": "YOUR_DOMAIN.com/api/*",
+          "zone_name": "YOUR_DOMAIN.com"
+        }
+      ]
+    }
+  }
+}

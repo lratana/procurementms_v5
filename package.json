@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "tsc --noEmit && vite build --mode production",
-    "build:pages": "tsc --noEmit && vite build --mode production",
     "dev:pages": "vite --host 0.0.0.0",
+    "build": "npm run typecheck && vite build --mode production",
+    "build:pages": "npm run typecheck && vite build --mode production",
     "start": "tsx server.ts",
     "preview": "vite preview --host 0.0.0.0",
     "preview:production": "vite preview --host 0.0.0.0 --port 4173",
     "migrate": "tsx server/db/migrate.ts",
-    "lint": "tsc --noEmit",
-    "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "lint": "npm run typecheck",
+    "typecheck": "tsc --noEmit",
+    "typecheck:worker": "npm --prefix worker run typecheck",
+    "typecheck:all": "npm run typecheck && npm run typecheck:worker",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

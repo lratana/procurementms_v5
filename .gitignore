@@ -25,3 +25,28 @@ coverage/
 *.dump
 backups/
 uploads/
+
+
+# Local Worker dependencies and generated state
+worker/node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Local databases and generated exports
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.dump
+
+.netlify/
+worker/.wrangler/
+*.pem
+*.key

@@ -1,56 +1,46 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "procurementms-api",
+  "name": "procurementms-api-dev",
   "main": "src/index.ts",
   "compatibility_date": "2026-11-03",
   "compatibility_flags": [],
-
-  // Default environment is for local development.
-  // Do not attach a production custom-domain route here.
+  "workers_dev": true,
   "vars": {
     "APP_ENV": "development",
     "CORS_ORIGIN": "http://localhost:5173"
   },
-
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "procurement-db-dev",
-      "database_id": "00000000-0000-0000-0000-000000000001"
+      "database_id": "a7c325e5-e88c-4580-a38a-9e6e5f74bb0b"
     }
   ],
-
   "r2_buckets": [
     {
       "binding": "DOCUMENTS",
       "bucket_name": "procurement-documents-dev"
     }
   ],
-
   "env": {
     "production": {
-      "name": "procurementms-api-production",
+      "name": "procurementms-api",
+      "workers_dev": true,
       "vars": {
         "APP_ENV": "production",
-        "CORS_ORIGIN": "https://YOUR_DOMAIN.com"
+        "CORS_ORIGIN": "https://procurement-ms-moh.netlify.app"
       },
       "d1_databases": [
         {
           "binding": "DB",
           "database_name": "procurement-db",
-          "database_id": "00000000-0000-0000-0000-000000000002"
+          "database_id": "a75893f7-c107-492c-8c0e-fe964dc37fb7"
         }
       ],
       "r2_buckets": [
         {
           "binding": "DOCUMENTS",
           "bucket_name": "procurement-documents"
-        }
-      ],
-      "routes": [
-        {
-          "pattern": "YOUR_DOMAIN.com/api/*",
-          "zone_name": "YOUR_DOMAIN.com"
         }
       ]
     }

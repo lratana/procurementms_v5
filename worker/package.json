@@ -6,17 +6,26 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "typecheck": "tsc --noEmit",
-    "db:local": "wrangler d1 execute procurement-db --local --file=../cloudflare/schema.sql",
-    "db:remote": "wrangler d1 execute procurement-db --remote --file=../cloudflare/schema.sql",
+    "typecheck": "tsc --noEmit && node ./scripts/test-passwords.mjs",
+    "db:local": "wrangler d1 execute procurement-db-dev --local --file=../cloudflare/schema.sql",
+    "db:remote": "wrangler d1 execute procurement-db-dev --remote --file=../cloudflare/schema.sql",
+    "db:migrate:local": "wrangler d1 migrations apply procurement-db-dev --local",
+    "db:migrate:dev": "wrangler d1 migrations apply procurement-db-dev --remote",
+    "db:migrate:prod": "wrangler d1 migrations apply procurement-db --remote --env production",
+    "db:seed:local": "wrangler d1 execute procurement-db-dev --local --file=../cloudflare/seeds/0002_sample_data.sql",
+    "db:seed:dev": "wrangler d1 execute procurement-db-dev --remote --file=../cloudflare/seeds/0002_sample_data.sql",
+    "db:reset:local": "wrangler d1 execute procurement-db-dev --local --file=./scripts/sql/reset-local-only.sql",
+    "test:passwords": "node ./scripts/test-passwords.mjs",
     "deploy:production": "wrangler deploy --env production"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "hono": "^4.9.8",
     "jose": "^6.1.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261103.1",
+    "@types/bcryptjs": "^3.0.0",
     "typescript": "^5.9.3",
     "wrangler": "^4.45.0"
   }

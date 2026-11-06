@@ -2,6 +2,7 @@ import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
@@ -43,7 +44,7 @@ function cleanParams(params: any[]): any[] {
 async function initSqlite() {
   if (sqliteDb) return;
   const { DatabaseSync } = await import('node:sqlite');
-  const dbPath = path.resolve(process.cwd(), 'procurement.sqlite');
+  const dbPath = path.resolve(os.tmpdir(), 'procurement.sqlite');
   sqliteDb = new DatabaseSync(dbPath);
 
   // Register compatibility functions for MySQL queries
@@ -65,10 +66,23 @@ async function initSqlite() {
       title TEXT NOT NULL,
       description TEXT,
       fiscal_year INTEGER,
+      budget_type TEXT DEFAULT 'មូលធន',
       procurement_type TEXT,
       procurement_method TEXT,
       plan_date TEXT,
       plan_amount REAL
+    );
+
+    CREATE TABLE IF NOT EXISTS documents (
+      document_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      project_id TEXT NOT NULL,
+      file_name TEXT NOT NULL,
+      r2_key TEXT NOT NULL,
+      content_type TEXT,
+      file_size INTEGER,
+      uploaded_by INTEGER,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES projects(project_id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS project_requests (
@@ -214,6 +228,12 @@ async function initSqlite() {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  try {
+    sqliteDb.exec("ALTER TABLE projects ADD COLUMN budget_type TEXT DEFAULT 'មូលធន'");
+  } catch {
+    // Column already exists
+  }
 
   // Seed default data if users table is empty
   const userCheck = sqliteDb.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
@@ -489,15 +509,16 @@ export async function query<T = any>(sql: string, params: any[] = []): Promise<T
 
   // SQLite execution
   const cParams = cleanParams(params);
-  const trimmed = sql.trim();
+  const sqliteSql = sql.replace(/CAST\(([^)]+)\s+AS\s+CHAR\)/gi, 'CAST($1 AS TEXT)');
+  const trimmed = sqliteSql.trim();
   const isSelect = /^SELECT|^PRAGMA/i.test(trimmed);
 
   if (isSelect) {
-    const stmt = sqliteDb.prepare(sql);
+    const stmt = sqliteDb.prepare(sqliteSql);
     const rows = stmt.all(...cParams);
     return rows as T[];
   } else {
-    const stmt = sqliteDb.prepare(sql);
+    const stmt = sqliteDb.prepare(sqliteSql);
     stmt.run(...cParams);
     return [] as T[];
   }
@@ -517,7 +538,8 @@ export async function execute(sql: string, params: any[] = []): Promise<{ affect
 
   // SQLite execution
   const cParams = cleanParams(params);
-  const stmt = sqliteDb.prepare(sql);
+  const sqliteSql = sql.replace(/CAST\(([^)]+)\s+AS\s+CHAR\)/gi, 'CAST($1 AS TEXT)');
+  const stmt = sqliteDb.prepare(sqliteSql);
   const info = stmt.run(...cParams);
   return {
     affectedRows: Number(info.changes || 0),

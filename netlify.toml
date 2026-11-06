@@ -5,5 +5,14 @@
 [build.environment]
   VITE_API_BASE_URL = "/api"
 
-# SPA routing. /api/* is intercepted by the Cloudflare Worker route
-# before requests reach the Netlify origin.
+# Environment-specific Netlify contexts
+# Override VITE_API_BASE_URL in Netlify Site Settings per deploy context if using separate Worker hosts,
+# or keep "/api" when using same-origin proxy / Cloudflare Worker route.
+[context.production.environment]
+  VITE_API_BASE_URL = "/api"
+
+[context.deploy-preview.environment]
+  VITE_API_BASE_URL = "/api"
+
+[context.branch-deploy.environment]
+  VITE_API_BASE_URL = "/api"

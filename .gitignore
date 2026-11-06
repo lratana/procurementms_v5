@@ -48,5 +48,6 @@ worker/node_modules/
 
 .netlify/
 worker/.wrangler/
+public/assets/aistudio/
 *.pem
 *.key

@@ -7,13 +7,14 @@
   "workers_dev": true,
   "vars": {
     "APP_ENV": "development",
-    "CORS_ORIGIN": "http://localhost:5173"
+    "CORS_ORIGIN": "http://localhost:5173,http://localhost:3000"
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "procurement-db-dev",
-      "database_id": "a7c325e5-e88c-4580-a38a-9e6e5f74bb0b"
+      "database_id": "a7c325e5-e88c-4580-a38a-9e6e5f74bb0b",
+      "migrations_dir": "../cloudflare/migrations"
     }
   ],
   "r2_buckets": [
@@ -34,7 +35,8 @@
         {
           "binding": "DB",
           "database_name": "procurement-db",
-          "database_id": "a75893f7-c107-492c-8c0e-fe964dc37fb7"
+          "database_id": "a75893f7-c107-492c-8c0e-fe964dc37fb7",
+          "migrations_dir": "../cloudflare/migrations"
         }
       ],
       "r2_buckets": [
